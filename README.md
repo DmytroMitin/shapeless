@@ -1,3 +1,16 @@
+# Patch
+
+https://github.com/milessabin/shapeless/commit/bf555242c4ea42c1306befbd6716c84f3eeaab31
+
+~~https://github.com/milessabin/shapeless/commit/e404b39b12863cb2042937b2e2f4aed04d3962a0~~
+
+https://oss.sonatype.org/content/groups/public/com/chuusai/shapeless_2.10/
+
+https://github.com/DmytroMitin/AUXify#using-auxify-shapeless
+
+[![Build Status](https://api.travis-ci.org/DmytroMitin/shapeless.png?branch=DmytroMitin%2Fpatch)](https://travis-ci.org/DmytroMitin/shapeless)
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/DmytroMitin/AUXify)
+
 # shapeless: generic programming for Scala
 
 **shapeless** is a type class and dependent type based generic programming library for Scala. It had its origins in
