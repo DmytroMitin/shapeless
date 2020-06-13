@@ -167,6 +167,32 @@ lazy val coreJVM = core.jvm
 lazy val coreJS = core.js
 lazy val coreNative = core.native
 
+lazy val macroCompatV = "1.1.1"
+lazy val myTests = project
+  .dependsOn(coreJVM)
+  .settings(
+    libraryDependencies ++= Seq(
+      "com.github.dmytromitin" %% "auxify-macros" % "0.7",
+      scalaOrganization.value % "scala-reflect" % scalaVersion.value,
+      scalaOrganization.value % "scala-compiler" % scalaVersion.value % Provided, // for macro-compat
+      "org.scalatest" %% "scalatest" % "3.1.2" % Test,
+    ) ++ (CrossVersion.partialVersion(scalaVersion.value) match {
+      case Some((2, v)) if v >= 13 => Seq(
+        "org.typelevel" % "macro-compat_2.13.0-RC2" % macroCompatV,
+      )
+      case _                       => Seq(
+        compilerPlugin("org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full),
+        "org.typelevel" %% "macro-compat" % macroCompatV,
+      )
+    }),
+    scalacOptions ++= Seq(
+      "-Xlog-implicits",
+    ) ++ (CrossVersion.partialVersion(scalaVersion.value) match {
+      case Some((2, v)) if v >= 13 => Seq("-Ymacro-annotations")
+      case _                       => Nil
+    }),
+  )
+
 lazy val scratch = crossProject(JSPlatform, JVMPlatform, NativePlatform).crossType(CrossType.Pure)
   .configureCross(configureJUnit)
   .dependsOn(core)
