@@ -299,10 +299,11 @@ class SingletonTypeMacros(val c: whitebox.Context) extends SingletonTypeUtils wi
     """
   }
 
-  def mkAttributedQualifier(tpe: Type): Tree = {
+  def mkAttributedQualifier(tpe: Type, sym: Symbol = NoSymbol): Tree = {
     val global = c.universe.asInstanceOf[scala.tools.nsc.Global]
     val gTpe = tpe.asInstanceOf[global.Type]
-    global.gen.mkAttributedQualifier(gTpe).asInstanceOf[Tree]
+    val gSym = sym.asInstanceOf[global.Symbol]
+    global.gen.mkAttributedQualifier(gTpe, gSym).asInstanceOf[Tree]
   }
 
   // PATCHED
@@ -318,7 +319,8 @@ class SingletonTypeMacros(val c: whitebox.Context) extends SingletonTypeUtils wi
 
       case ThisType(sym) => This(sym)
 
-      case t@TypeRef(_, sym, _) if sym.isModuleClass => mkAttributedQualifier(t)
+      case TypeRef(pre, sym, _) if (sym ne null) && sym.isTerm && sym.asTerm.isStable =>
+        mkAttributedQualifier(pre, sym)
 
       case _ =>
         c.abort(c.enclosingPosition, s"Type argument $tpe=${showRaw(tpe)} is not a singleton type")

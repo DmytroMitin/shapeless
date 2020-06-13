@@ -11,3 +11,11 @@ trait StringToSymbol[S <: String] {
 object StringToSymbol {
   implicit def mkStringToSymbol[S <: String](implicit witness: Witness.Aux[S]): StringToSymbol.Aux[S, Symbol @@ S] = null
 }
+
+@aux @apply @instance
+trait SymbolToString[S <: Symbol] {
+  type Out <: String
+}
+object SymbolToString {
+  implicit def mkSymbolToString[S <: String](implicit witness: Witness.Aux[S]): SymbolToString.Aux[Symbol @@ S, S] = null
+}
