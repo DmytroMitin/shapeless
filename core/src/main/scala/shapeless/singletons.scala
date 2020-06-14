@@ -186,9 +186,17 @@ trait SingletonTypeUtils extends ReprTypes {
 
     def apply(s: String): Type = appliedType(atatTpe, List(SymTpe, c.internal.constantType(Constant(s))))
 
+    //PATCHED, removed in > 2.4.0-M1
     def unapply(t: Type): Option[String] =
-      unrefine(t).dealias match {
-        case RefinedType(List(SymTpe, TypeRef(_, TaggedSym, List(ConstantType(Constant(s: String))))), _) => Some(s)
+      unrefine(t) match {
+        case RefinedType(List(t1, t2), _) =>
+          (t1.dealias, t2.dealias) match {
+            case (SymTpe, TypeRef(_, TaggedSym, List(t3))) => unrefine(t3) match {
+              case ConstantType(Constant(s: String)) => Some(s)
+              case _ => None
+            }
+            case _ => None
+          }
         case _ => None
       }
   }
@@ -298,8 +306,9 @@ class SingletonTypeMacros(val c: whitebox.Context) extends SingletonTypeUtils wi
     global.gen.mkAttributedQualifier(gTpe).asInstanceOf[Tree]
   }
 
+  // PATCHED
   def extractSingletonValue(tpe: Type): Tree =
-    tpe match {
+    SingletonSymbolType.unrefine(tpe) match {
       case ConstantType(Constant(s: scala.Symbol)) => mkSingletonSymbol(s.name)
 
       case ConstantType(c: Constant) => Literal(c)
@@ -313,7 +322,7 @@ class SingletonTypeMacros(val c: whitebox.Context) extends SingletonTypeUtils wi
       case t@TypeRef(_, sym, _) if sym.isModuleClass => mkAttributedQualifier(t)
 
       case _ =>
-        c.abort(c.enclosingPosition, s"Type argument $tpe is not a singleton type")
+        c.abort(c.enclosingPosition, s"Type argument $tpe=${showRaw(tpe)} is not a singleton type")
     }
 
   def materializeImpl[T: WeakTypeTag]: Tree = {
