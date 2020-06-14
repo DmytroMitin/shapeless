@@ -319,8 +319,7 @@ class SingletonTypeMacros(val c: whitebox.Context) extends SingletonTypeUtils wi
 
       case ThisType(sym) => This(sym)
 
-      case TypeRef(pre, sym, _) if (sym ne null) && sym.isTerm && sym.asTerm.isStable =>
-        mkAttributedQualifier(pre, sym)
+      case t@TypeRef(pre, sym, _) if sym.isModuleClass => mkAttributedQualifier(t) //mkAttributedQualifier(t, sym)
 
       case _ =>
         c.abort(c.enclosingPosition, s"Type argument $tpe=${showRaw(tpe)} is not a singleton type")

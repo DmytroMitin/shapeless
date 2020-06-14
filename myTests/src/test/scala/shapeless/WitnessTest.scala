@@ -5,7 +5,7 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import shapeless.syntax.singleton._
 import shapeless.tag.{@@, Tagged}
-import shapeless.test.sameTyped
+import shapeless.test.{illTyped, sameTyped}
 
 class WitnessTest extends AnyFlatSpec with Matchers {
   type Str = Witness.`"a"`.T
@@ -21,8 +21,9 @@ class WitnessTest extends AnyFlatSpec with Matchers {
   implicitly[Witness.Aux[Symb]]
 
   implicitly[poly.Case[symbolToStringPoly.type, (Symbol @@ Witness.`"a"`.T) :: HNil]]
+  sameTyped[Witness.`"a"`.T](symbolToStringPoly.apply[Witness.`'a`.T]('a.narrow))("a".narrow)
 
-  implicitly[Refute[Witness.Aux[Int]]]
+  illTyped("implicitly[Witness.Aux[Int]]")
 
   trait B
   case object A extends B
