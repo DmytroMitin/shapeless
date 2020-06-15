@@ -187,18 +187,26 @@ trait SingletonTypeUtils extends ReprTypes {
     def apply(s: String): Type = appliedType(atatTpe, List(SymTpe, c.internal.constantType(Constant(s))))
 
     //PATCHED, removed in > 2.4.0-M1
-    def unapply(t: Type): Option[String] =
-      unrefine(t) match {
-        case RefinedType(List(t1, t2), _) =>
-          (t1.dealias, t2.dealias) match {
-            case (SymTpe, TypeRef(_, TaggedSym, List(t3))) => unrefine(t3) match {
-              case ConstantType(Constant(s: String)) => Some(s)
+    def unapply(t: Type): Option[String] = t match {
+      case ConstantOrSingle(ConstantType(Constant(s: String))) => Some(s)
+      case _                                                   => None
+    }
+
+    object ConstantOrSingle {
+      def unapply(t: Type): Option[Type] =
+        unrefine(t) match {
+          case RefinedType(List(t1, t2), _) =>
+            (t1.dealias, t2.dealias) match {
+              case (SymTpe, TypeRef(_, TaggedSym, List(t3))) => unrefine(t3) match {
+                case t4@ConstantType(Constant(_: String))    => Some(t4)
+                case t4: SingleType if t4 <:< typeOf[String] => Some(t4)
+                case _                                       => None
+              }
               case _ => None
             }
-            case _ => None
-          }
-        case _ => None
-      }
+          case _ => None
+        }
+    }
   }
 
   def mkSingletonSymbol(s: String): Tree = {
@@ -315,7 +323,8 @@ class SingletonTypeMacros(val c: whitebox.Context) extends SingletonTypeUtils wi
 
       case t: SingleType => mkAttributedQualifier(t)
 
-      case SingletonSymbolType(c) => mkSingletonSymbol(c)
+      case SingletonSymbolType.ConstantOrSingle(ConstantType(Constant(s: String))) => mkSingletonSymbol(s)
+      case SingletonSymbolType.ConstantOrSingle(t: SingleType)                     => mkAttributedQualifier(t)
 
       case ThisType(sym) => This(sym)
 
