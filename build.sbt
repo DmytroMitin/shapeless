@@ -16,7 +16,8 @@ noPublishSettings
 crossScalaVersions := Nil
 
 inThisBuild(Seq(
-  organization := "com.chuusai",
+  organization := "com.github.dmytromitin",
+//  organization := "com.chuusai",
   scalaVersion := Scala213,
   crossScalaVersions := Seq(Scala211, Scala212, Scala213),
   mimaFailOnNoPrevious := false
@@ -75,8 +76,10 @@ lazy val commonSettings = Seq(
 
   scmInfo :=
     Some(ScmInfo(
-      url("https://github.com/milessabin/shapeless"),
-      "scm:git:git@github.com:milessabin/shapeless.git"
+      url("https://github.com/DmytroMitin/shapeless"),
+//      url("https://github.com/milessabin/shapeless"),
+      "scm:git:git@github.com:DmytroMitin/shapeless.git"
+//      "scm:git:git@github.com:milessabin/shapeless.git"
     ))
 ) ++ crossVersionSharedSources ++ scalaMacroDependencies
 
@@ -177,6 +180,7 @@ lazy val myTests = project
       case Some((2, v)) if v >= 13 => Seq("-Ymacro-annotations")
       case _                       => Nil
     }),
+    noPublishSettings,
   )
 
 lazy val scratch = crossProject(JSPlatform, JVMPlatform, NativePlatform).crossType(CrossType.Pure)
@@ -287,9 +291,11 @@ lazy val crossVersionSharedSources: Seq[Setting[_]] =
 lazy val publishSettings = Seq(
   publishArtifact in Test := false,
   pomIncludeRepository := (_ => false),
-  homepage := Some(url("https://github.com/milessabin/shapeless")),
+  homepage := Some(url("https://github.com/DmytroMitin/shapeless")),
+//  homepage := Some(url("https://github.com/milessabin/shapeless")),
   licenses := Seq("Apache 2" -> url("http://www.apache.org/licenses/LICENSE-2.0.txt")),
-  scmInfo := Some(ScmInfo(url("https://github.com/milessabin/shapeless"), "scm:git:git@github.com:milessabin/shapeless.git")),
+  scmInfo := Some(ScmInfo(url("https://github.com/DmytroMitin/shapeless"), "scm:git:git@github.com:DmytroMitin/shapeless.git")),
+//  scmInfo := Some(ScmInfo(url("https://github.com/milessabin/shapeless"), "scm:git:git@github.com:milessabin/shapeless.git")),
   developers := List(
     Developer("milessabin", "Miles Sabin", "", url("http://milessabin.com/blog")),
     Developer("joroKr21", "Georgi Krastev", "joro.kr.21@gmail.com", url("https://twitter.com/Joro_Kr"))
@@ -324,3 +330,5 @@ lazy val coreOsgiSettings = osgiSettings ++ Seq(
   },
   OsgiKeys.additionalHeaders := Map("-removeheaders" -> "Include-Resource,Private-Package")
 )
+
+credentials in ThisBuild += Credentials(Path.userHome / ".sbt" / "sonatype_credential")
