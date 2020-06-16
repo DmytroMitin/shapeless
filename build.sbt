@@ -11,9 +11,9 @@ import sbtcrossproject.CrossProject
 
 val scala211 = "2.11.12"
 inThisBuild(Seq(
-  organization := "com.chuusai",
-  scalaVersion := "2.10.7",
-//  scalaVersion := "2.13.1",
+  organization := "com.github.dmytromitin",
+//  organization := "com.chuusai",
+  scalaVersion := "2.13.1",
   crossScalaVersions := Seq("2.10.7", scala211, "2.12.10", "2.13.1"),
   mimaFailOnNoPrevious := false
 ))
@@ -73,8 +73,10 @@ lazy val commonSettings = Seq(
 
   scmInfo :=
     Some(ScmInfo(
-      url("https://github.com/milessabin/shapeless"),
-      "scm:git:git@github.com:milessabin/shapeless.git"
+      url("https://github.com/DmytroMitin/shapeless"),
+//      url("https://github.com/milessabin/shapeless"),
+      "scm:git:git@github.com:DmytroMitin/shapeless.git"
+//      "scm:git:git@github.com:milessabin/shapeless.git"
     ))
 ) ++ crossVersionSharedSources ++ scalaMacroDependencies
 
@@ -325,9 +327,11 @@ lazy val publishSettings = Seq(
     else
       Some("releases"  at nexus + "service/local/staging/deploy/maven2")
   },
-  homepage := Some(url("https://github.com/milessabin/shapeless")),
+  homepage := Some(url("https://github.com/DmytroMitin/shapeless")),
+//  homepage := Some(url("https://github.com/milessabin/shapeless")),
   licenses := Seq("Apache 2" -> url("http://www.apache.org/licenses/LICENSE-2.0.txt")),
-  scmInfo := Some(ScmInfo(url("https://github.com/milessabin/shapeless"), "scm:git:git@github.com:milessabin/shapeless.git")),
+  scmInfo := Some(ScmInfo(url("https://github.com/DmytroMitin/shapeless"), "scm:git:git@github.com:DmytroMitin/shapeless.git")),
+//  scmInfo := Some(ScmInfo(url("https://github.com/milessabin/shapeless"), "scm:git:git@github.com:milessabin/shapeless.git")),
   pomExtra := (
     <developers>
       <developer>
@@ -397,7 +401,9 @@ lazy val releaseSettings = Seq(
   )
 )
 
-credentials in ThisBuild ++= (for {
-  username <- Option(System.getenv().get("SONATYPE_USERNAME"))
-  password <- Option(System.getenv().get("SONATYPE_PASSWORD"))
-} yield Credentials("Sonatype Nexus Repository Manager", "oss.sonatype.org", username, password)).toSeq
+//credentials in ThisBuild ++= (for {
+//  username <- Option(System.getenv().get("SONATYPE_USERNAME"))
+//  password <- Option(System.getenv().get("SONATYPE_PASSWORD"))
+//} yield Credentials("Sonatype Nexus Repository Manager", "oss.sonatype.org", username, password)).toSeq
+
+credentials in ThisBuild += Credentials(Path.userHome / ".sbt" / "sonatype_credential")
