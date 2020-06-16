@@ -15,7 +15,7 @@ https://github.com/DmytroMitin/AUXify#using-auxify-shapeless
 
 ```
 scalaVersion := "2.10.7"
-libraryDependencies += "com.github.dmytromitin" %% "shapeless" % "2.4.0-M1-30032020-e6c3f71-PATCH"
+libraryDependencies += "com.github.dmytromitin" %% "shapeless" % "2.4.0-SNAPSHOT-18022020-bf55524-PATCH"
 ```
 
 # shapeless: generic programming for Scala
