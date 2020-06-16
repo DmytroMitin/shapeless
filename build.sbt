@@ -291,6 +291,13 @@ lazy val crossVersionSharedSources: Seq[Setting[_]] =
 lazy val publishSettings = Seq(
   publishArtifact in Test := false,
   pomIncludeRepository := (_ => false),
+  publishTo := {
+    val nexus = "https://oss.sonatype.org/"
+    if (version.value.trim.endsWith("SNAPSHOT"))
+      Some("snapshots" at nexus + "content/repositories/snapshots")
+    else
+      Some("releases"  at nexus + "service/local/staging/deploy/maven2")
+  },
   homepage := Some(url("https://github.com/DmytroMitin/shapeless")),
 //  homepage := Some(url("https://github.com/milessabin/shapeless")),
   licenses := Seq("Apache 2" -> url("http://www.apache.org/licenses/LICENSE-2.0.txt")),
