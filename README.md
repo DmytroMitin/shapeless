@@ -6,10 +6,17 @@ https://github.com/milessabin/shapeless/commit/bf555242c4ea42c1306befbd6716c84f3
 
 https://oss.sonatype.org/content/groups/public/com/chuusai/shapeless_2.10/
 
+https://oss.sonatype.org/content/groups/public/com/github/dmytromitin/shapeless_2.10/
+
 https://github.com/DmytroMitin/AUXify#using-auxify-shapeless
 
 [![Build Status](https://api.travis-ci.org/DmytroMitin/shapeless.png?branch=DmytroMitin%2Fpatch)](https://travis-ci.org/DmytroMitin/shapeless)
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/DmytroMitin/AUXify)
+
+```
+scalaVersion := "2.10.7"
+libraryDependencies += "com.github.dmytromitin" %% "shapeless" % "2.4.0-M1-30032020-e6c3f71-PATCH"
+```
 
 # shapeless: generic programming for Scala
 
